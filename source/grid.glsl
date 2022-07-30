@@ -146,7 +146,7 @@ float compute_depth (vec3 position)
 {
 	vec4 clip_space_position = frag_projection * frag_view * vec4 (position.xyz, 1.0);
 
-	return (clip_space_position.z / clip_space_position.w);
+	return 0.5 + 0.5 * (clip_space_position.z / clip_space_position.w);
 }
 
 float compute_linear_depth (vec3 position)

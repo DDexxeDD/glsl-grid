@@ -202,7 +202,7 @@ void initialize (void)
 			.depth =
 			{
 				.compare = SG_COMPAREFUNC_LESS,
-				.write_enabled = false
+				.write_enabled = true
 			},
 			.colors[0].blend =
 			{
