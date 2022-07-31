@@ -146,6 +146,13 @@ float compute_depth (vec3 position)
 {
 	vec4 clip_space_position = frag_projection * frag_view * vec4 (position.xyz, 1.0);
 
+	// the depth calculation in the original article is for vulkan
+	// the depth calculation for opengl is:
+	// 	(far - near) * 0.5 * ndc_depth + (far + near) * 0.5
+	// 	far = 1.0  (opengl max depth)
+	// 	near = 0.0  (opengl min depth)
+	//		ndc_depth = clip_space_position.z / clip_space_position.w
+	//	since our near and far are fixed, we can reduce the above formula to the following
 	return 0.5 + 0.5 * (clip_space_position.z / clip_space_position.w);
 }
 
