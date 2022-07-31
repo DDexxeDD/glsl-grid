@@ -252,6 +252,9 @@ void frame (void)
 	glm_mat4_copy (state.camera.projection, vs_cube_params.projection);
 	glm_mat4_copy (GLM_MAT4_IDENTITY, vs_cube_params.model);
 
+	// line up the cube with the grid
+	glm_translate (vs_cube_params.model, (vec3) {0.5f, 0.0f, 0.5f});
+
 	sg_apply_uniforms (SG_SHADERSTAGE_VS, SLOT_vs_cube_params, &SG_RANGE (vs_cube_params));
 
 	fs_cube_params_t fs_cube_params;
@@ -281,6 +284,11 @@ void frame (void)
 	glm_vec3_copy (state.camera.position, vs_grid_params.camera_position);
 
 	sg_apply_uniforms (SG_SHADERSTAGE_VS, SLOT_vs_grid_params, &SG_RANGE (vs_grid_params));
+
+	fs_grid_params_t fs_grid_params;
+	fs_grid_params.grid_height = 0.0f;
+
+	sg_apply_uniforms (SG_SHADERSTAGE_FS, SLOT_fs_grid_params, &SG_RANGE (fs_grid_params));
 
 	sg_draw (0, 6, 1);
 

@@ -105,17 +105,24 @@ in mat4 frag_projection;
 in vec3 near_point;
 in vec3 far_point;
 
+uniform fs_grid_params
+{
+	float grid_height;
+};
+
 out vec4 frag_color;
 
 vec4 grid (vec3 frag_position_3d, float scale)
 {
-	if (frag_position_3d.x > 10
-		|| frag_position_3d.x < -10
-		|| frag_position_3d.z > 10
-		|| frag_position_3d.z < -10)
-	{
-		return vec4 (0, 0, 0, 0);
-	}
+	// dont want the grid to be infinite?
+	// 	uncomment this bit, set your boundaries to whatever you want
+	//if (frag_position_3d.x > 10
+	//	|| frag_position_3d.x < -10
+	//	|| frag_position_3d.z > 10
+	//	|| frag_position_3d.z < -10)
+	//{
+	//	return vec4 (0, 0, 0, 0);
+	//}
 
 	vec2 coord = frag_position_3d.xz * scale;
 	vec2 derivative = fwidth (coord);
@@ -125,14 +132,14 @@ vec4 grid (vec3 frag_position_3d, float scale)
 	float minimum_x = min (derivative.x, 1);
 	vec4 color = vec4 (0.2, 0.2, 0.2, 1.0 - min (line, 1.0));
 
-	// z axis
+	// z axis color
 	//if (frag_position_3d.x > -0.1 * minimum_x
 	//	&& frag_position_3d.x < 0.1 * minimum_x)
 	//{
 	//	color.z = 1.0;
 	//}
 
-	//// x axis
+	//// x axis color
 	//if (frag_position_3d.z > -0.1 * minimum_z
 	//	&& frag_position_3d.z < 0.1 * minimum_z)
 	//{
@@ -154,6 +161,7 @@ float compute_depth (vec3 position)
 	//		ndc_depth = clip_space_position.z / clip_space_position.w
 	//	since our near and far are fixed, we can reduce the above formula to the following
 	return 0.5 + 0.5 * (clip_space_position.z / clip_space_position.w);
+	// this could also be (ndc_depth + 1.0) * 0.5
 }
 
 float compute_linear_depth (vec3 position)
@@ -169,9 +177,6 @@ float compute_linear_depth (vec3 position)
 
 void main ()
 {
-	// TODO
-	// 	make this a uniform, so the grid can move up and down
-	float grid_height = 0.0;
 	float t = (grid_height - near_point.y) / (far_point.y - near_point.y);
 	vec3 frag_position_3d = near_point + t * (far_point - near_point);
 
